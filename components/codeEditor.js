@@ -23,13 +23,13 @@ const CodeEditor = ({ code, setCode, language }) => {
   };
 
   return (
-    <div className="relative w-full h-80 border border-gray-300 rounded-md overflow-hidden">
+    <div className="relative w-full h-80 border border-gray-600 rounded-md overflow-hidden">
       <textarea
         ref={textareaRef}
         value={code}
         onChange={(e) => setCode(e.target.value)}
         onKeyDown={handleKeyDown}
-        className="w-full h-full p-4 font-mono text-sm resize-none focus:outline-none"
+        className="w-full h-full p-4 font-mono text-sm resize-none focus:outline-none bg-gray-900 text-gray-200"
         placeholder={`Enter your ${language} code here...`}
         spellCheck="false"
       />
