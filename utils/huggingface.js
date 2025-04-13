@@ -1,5 +1,8 @@
+/**
+ * Utility to interact with Hugging Face Inference API - Clean output
+ */
 export async function fixCode(code, language) {
-  const HF_TOKEN ='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';
+  const HF_TOKEN = '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';
   
   // Headers with authorization
   const headers = {
@@ -13,16 +16,10 @@ export async function fixCode(code, language) {
   // Using StarCoder model which has better anonymous access
   const MODEL_URL = 'https://api-inference.huggingface.co/models/bigcode/starcoder';
   
-  // More directive prompt that explicitly asks for fixing
-  const prompt = `You are a code fixing expert. Your task is to fix bugs in the code below.
+  // More precise prompt that asks for only clean code with no explanations
+  const prompt = `Fix this ${language} code and return ONLY the corrected code with no comments, explanations, notes, or extra text.
 
-LANGUAGE: ${language}
-
-BUGGY CODE:
-${code}
-
-FIX THE BUGS AND RETURN ONLY THE CORRECTED CODE:
-`;
+${code}`;
 
   try {
     console.log("Sending request to Hugging Face API...");
@@ -54,25 +51,43 @@ FIX THE BUGS AND RETURN ONLY THE CORRECTED CODE:
     // Extract the fixed code
     const generatedText = result[0]?.generated_text || result.generated_text || '';
     
-    // Try to extract just the code part
+    // Clean up the response to get just the code
+    // This removes any explanatory text, notes, etc.
     let fixedCode = generatedText.trim();
     
-    // If the response includes any labels or markers, remove them
-    if (fixedCode.includes("CORRECTED CODE:")) {
-      fixedCode = fixedCode.split("CORRECTED CODE:")[1].trim();
+    // Remove any common explanation markers
+    const markersToRemove = [
+      "FIXED CODE:", "CORRECTED CODE:", "SOLUTION:", "OUTPUT:", 
+      "Here's the fixed code:", "Here is the fixed code:"
+    ];
+    
+    for (const marker of markersToRemove) {
+      if (fixedCode.includes(marker)) {
+        fixedCode = fixedCode.split(marker)[1].trim();
+      }
     }
     
-    // Simple explanation
-    const explanation = "I've analyzed your code and fixed the bugs. The corrected version should now run properly.";
-
-    return { fixedCode, explanation };
+    // Remove any text that looks like constraints or notes
+    const linesToRemove = [
+      "NOTE:", "CONSTRAINTS:", "INPUT:", "OUTPUT:", "SAMPLE INPUT:", "SAMPLE OUTPUT:"
+    ];
+    
+    const lines = fixedCode.split('\n');
+    const cleanedLines = lines.filter(line => {
+      return !linesToRemove.some(marker => line.trim().startsWith(marker));
+    });
+    
+    fixedCode = cleanedLines.join('\n');
+    
+    // Return just the fixed code without explanation
+    return { fixedCode, explanation: "" };
   } catch (error) {
     console.error('Error calling Hugging Face API:', error);
     
-    // Simple fallback analysis in case of API failure
+    // Simple fallback
     return {
       fixedCode: code,
-      explanation: "Sorry, I couldn't connect to the AI service to fix your code. Please try again later or check your code manually."
+      explanation: ""
     };
   }
 }
