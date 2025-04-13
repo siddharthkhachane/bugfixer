@@ -17,15 +17,18 @@ export default async function handler(req, res) {
     // Call the Hugging Face API to fix the code
     const result = await fixCode(code, language);
     
-    // Always return 200 status even if there was an error
-    return res.status(200).json(result);
+    // Return only the fixed code, no explanation
+    return res.status(200).json({
+      fixedCode: result.fixedCode,
+      explanation: ""
+    });
   } catch (error) {
     console.error('Error fixing code:', error);
     
-    // Return a user-friendly error
+    // Return original code if there's an error
     return res.status(200).json({ 
-      fixedCode: req.body.code || "// Error occurred",
-      explanation: "There was a problem connecting to the code fixing service. Please try again later."
+      fixedCode: req.body.code || "",
+      explanation: ""
     });
   }
 }
