@@ -1,16 +1,17 @@
+/**
+ * Utility to interact with Hugging Face Inference API - Direct API key
+ */
 export async function fixCode(code, language) {
-  const HF_TOKEN = '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';
+  // Direct API key instead of environment variable
+  const HF_TOKEN = "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";
   
   const headers = {
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${HF_TOKEN}`
   };
-  
-  if (HF_TOKEN) {
-    headers['Authorization'] = `Bearer ${HF_TOKEN}`;
-  }
 
-  // Use CodeLlama-7b which is better for code tasks
-  const MODEL_URL = 'https://api-inference.huggingface.co/models/codellama/CodeLlama-7b-hf';
+  // Use a smaller, faster model that's still good for code
+  const MODEL_URL = 'https://api-inference.huggingface.co/models/replit/replit-code-v1-3b';
   
   // Simple prompt focused on fixing
   const prompt = `Fix this ${language} code:
