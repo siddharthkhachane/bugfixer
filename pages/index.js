@@ -63,14 +63,14 @@ export default function Home() {
       </div>
 
       <Head>
-        <title>BugFixer - AI Code Debugging Tool</title>
+        <title>BugFixer - Code Fix Tool</title>
         <meta name="description" content="Fix your code bugs with AI" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="container mx-auto py-10 px-4 relative z-10">
         <h1 className="text-4xl font-bold text-center mb-2 text-blue-400">BugFixer</h1>
-        <p className="text-center text-gray-400 mb-8">Powered by AI - Fix your code in seconds</p>
+        <p className="text-center text-gray-400 mb-8">Fix your code in seconds</p>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 backdrop-filter backdrop-blur-sm bg-opacity-80">
