@@ -2,7 +2,7 @@
  * Utility to interact with Hugging Face Inference API using StarCoder model
  */
 export async function fixCode(code, language) {
-  const HF_TOKEN = process.env.HUGGING_FACE_API_KEY;
+  const HF_TOKEN = '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';
   
   // Headers with authorization
   const headers = {
