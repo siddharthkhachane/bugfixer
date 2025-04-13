@@ -10,9 +10,9 @@ export async function fixCode(code, language) {
     'Content-Type': 'application/json',
   };
   
-  if (HF_TOKEN) {
-    headers['Authorization'] = `Bearer ${HF_TOKEN}`;
-  }
+  // if (HF_TOKEN) {
+  //   headers['Authorization'] = `Bearer ${HF_TOKEN}`;
+  // }
 
   // We'll use CodeLlama for code generation/fixing
   // Free to use with reasonable rate limits
