@@ -12,15 +12,20 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Code is required' });
     }
 
+    console.log(`Processing ${language} code fix request...`);
+
     // Call the Hugging Face API to fix the code
     const result = await fixCode(code, language);
-
+    
+    // Always return 200 status even if there was an error
     return res.status(200).json(result);
   } catch (error) {
     console.error('Error fixing code:', error);
-    return res.status(500).json({ 
-      error: 'Failed to fix code. Please try again later.',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    
+    // Return a user-friendly error
+    return res.status(200).json({ 
+      fixedCode: req.body.code || "// Error occurred",
+      explanation: "There was a problem connecting to the code fixing service. Please try again later."
     });
   }
 }
