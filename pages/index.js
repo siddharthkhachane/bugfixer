@@ -47,19 +47,33 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white relative">
+      {/* Background pattern */}
+      <div className="absolute inset-0 overflow-hidden opacity-10 pointer-events-none">
+        <div className="absolute inset-0" style={{ 
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%239C92AC\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+          backgroundSize: '60px 60px'
+        }}></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-blue-500 opacity-5" 
+             style={{ 
+               backgroundImage: 'radial-gradient(circle, rgba(66, 153, 225, 0.5) 1px, transparent 1px)', 
+               backgroundSize: '28px 28px' 
+             }}>
+        </div>
+      </div>
+
       <Head>
         <title>BugFixer - AI Code Debugging Tool</title>
         <meta name="description" content="Fix your code bugs with AI" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="container mx-auto py-10 px-4">
+      <main className="container mx-auto py-10 px-4 relative z-10">
         <h1 className="text-4xl font-bold text-center mb-2 text-blue-400">BugFixer</h1>
         <p className="text-center text-gray-400 mb-8">Powered by AI - Fix your code in seconds</p>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6">
+          <div className="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 backdrop-filter backdrop-blur-sm bg-opacity-80">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-xl font-semibold text-blue-300">Your Code</h2>
               <select
@@ -105,7 +119,7 @@ export default function Home() {
         </div>
       </main>
       
-      <footer className="text-center py-6 text-gray-500">
+      <footer className="text-center py-6 text-gray-500 relative z-10">
         Fix bugs faster with advanced AI technology
       </footer>
     </div>
