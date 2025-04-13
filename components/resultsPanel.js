@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ResultsPanel = ({ fixedCode, explanation, language, isLoading }) => {
+const ResultsPanel = ({ fixedCode, language, isLoading }) => {
   // Function to copy code to clipboard
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
@@ -34,19 +34,6 @@ const ResultsPanel = ({ fixedCode, explanation, language, isLoading }) => {
               {fixedCode}
             </div>
           </div>
-
-          {explanation && (
-            <div>
-              <h3 className="text-lg font-medium mb-2">Explanation</h3>
-              <div className="p-4 bg-blue-50 border border-blue-100 rounded-md">
-                {explanation.split('\n').map((line, index) => (
-                  <p key={index} className="mb-2">
-                    {line}
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center h-80 text-gray-500">
