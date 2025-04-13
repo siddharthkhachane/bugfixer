@@ -47,24 +47,25 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       <Head>
-        <title>AI Code Bug Fixer</title>
+        <title>BugFixer - AI Code Debugging Tool</title>
         <meta name="description" content="Fix your code bugs with AI" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="container mx-auto py-10 px-4">
-        <h1 className="text-3xl font-bold text-center mb-8">AI Code Bug Fixer</h1>
+        <h1 className="text-4xl font-bold text-center mb-2 text-blue-400">BugFixer</h1>
+        <p className="text-center text-gray-400 mb-8">Powered by AI - Fix your code in seconds</p>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Your Code</h2>
+              <h2 className="text-xl font-semibold text-blue-300">Your Code</h2>
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
-                className="px-3 py-1 border border-gray-300 rounded-md text-sm"
+                className="bg-gray-700 text-white px-3 py-1 border border-gray-600 rounded-md text-sm"
               >
                 <option value="javascript">JavaScript</option>
                 <option value="python">Python</option>
@@ -89,7 +90,7 @@ export default function Home() {
             </button>
             
             {error && (
-              <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-md">
+              <div className="mt-4 p-3 bg-red-900 text-red-200 rounded-md">
                 {error}
               </div>
             )}
@@ -104,8 +105,8 @@ export default function Home() {
         </div>
       </main>
       
-      <footer className="text-center py-8 text-gray-600">
-        Created with Hugging Face AI - No OpenAI required
+      <footer className="text-center py-6 text-gray-500">
+        Fix bugs faster with advanced AI technology
       </footer>
     </div>
   );
