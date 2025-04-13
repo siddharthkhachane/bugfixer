@@ -1,6 +1,3 @@
-/**
- * Utility to interact with Hugging Face Inference API - Focused on code fixing
- */
 export async function fixCode(code, language) {
   const HF_TOKEN = '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';
   
@@ -12,18 +9,15 @@ export async function fixCode(code, language) {
     headers['Authorization'] = `Bearer ${HF_TOKEN}`;
   }
 
-  const MODEL_URL = 'https://api-inference.huggingface.co/models/bigcode/starcoder';
+  // Use CodeLlama-7b which is better for code tasks
+  const MODEL_URL = 'https://api-inference.huggingface.co/models/codellama/CodeLlama-7b-hf';
   
-  // Very explicit prompt to get exactly what we want
-  const prompt = `I have this ${language} code that may have errors. Please fix ONLY the errors in this exact code and return the complete fixed version of the SAME code. Do not create additional functions or explanations.
+  // Simple prompt focused on fixing
+  const prompt = `Fix this ${language} code:
 
-\`\`\`${language}
 ${code}
-\`\`\`
 
-Fixed code:
-\`\`\`${language}
-`;
+Fixed code:`;
 
   try {
     console.log("Sending request to Hugging Face API...");
@@ -36,7 +30,6 @@ Fixed code:
         parameters: {
           max_new_tokens: 1024,
           temperature: 0.1,
-          top_p: 0.95,
           do_sample: false,
           return_full_text: false
         }
@@ -55,18 +48,8 @@ Fixed code:
     // Extract the fixed code
     let fixedCode = result[0]?.generated_text || result.generated_text || '';
     
-    // If the response contains a code block ending, remove it
-    if (fixedCode.includes("\`\`\`")) {
-      fixedCode = fixedCode.split("\`\`\`")[0].trim();
-    }
-    
-    // Simple post-processing to clean up common issues
-    fixedCode = fixedCode
-      // Remove Python-style comment lines
-      .replace(/^#.*$/gm, '')
-      // Remove explanatory text that might appear at the end
-      .replace(/^(Here's|This|The).*$/gm, '')
-      .trim();
+    // Simple post-processing
+    fixedCode = fixedCode.trim();
     
     return { fixedCode, explanation: "" };
   } catch (error) {
