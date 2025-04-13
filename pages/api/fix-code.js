@@ -1,4 +1,4 @@
-import { fixCode } from '../../utils/huggingface';
+import { analyzeAndFixCode } from '../../utils/codeAnalyzer';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -14,19 +14,17 @@ export default async function handler(req, res) {
 
     console.log(`Processing ${language} code fix request...`);
 
-    // Call the Hugging Face API to fix the code
-    const result = await fixCode(code, language);
+    // Use our local code analyzer instead of the external API
+    const result = analyzeAndFixCode(code, language);
     
-    // Even if there was an error in the API call, we'll return a 200
-    // with the error message in the fixedCode field
     return res.status(200).json(result);
   } catch (error) {
     console.error('Error fixing code:', error);
     
     // Return a user-friendly error
     return res.status(200).json({ 
-      fixedCode: "// Error processing your request",
-      explanation: "There was a problem with the code fixing service. This might be due to rate limiting or a temporary service issue. Please try again in a few minutes."
+      fixedCode: code, // Return the original code
+      explanation: "There was an error analyzing your code. Please try again with a different code snippet."
     });
   }
 }
