@@ -1,8 +1,8 @@
 /**
- * Utility to interact with Hugging Face Inference API - DeepSeek Coder model
+ * Utility to interact with Hugging Face Inference API - CodeLlama model
  */
 export async function fixCode(code, language) {
-  // Direct API key instead of environment variable
+  // Direct API key
   const HF_TOKEN = "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";
   
   const headers = {
@@ -10,19 +10,15 @@ export async function fixCode(code, language) {
     'Authorization': `Bearer ${HF_TOKEN}`
   };
 
-  // DeepSeek-Coder - smaller model specialized for code
-  const MODEL_URL = 'https://api-inference.huggingface.co/models/deepseek-ai/deepseek-coder-1.3b-base';
+  // Use CodeLlama-7b which worked well
+  const MODEL_URL = 'https://api-inference.huggingface.co/models/codellama/CodeLlama-7b-hf';
   
-  // Clear instruction-focused prompt
-  const prompt = `You are a code fixing assistant. Fix the bugs in this ${language} code without adding comments or explanations:
+  // Simple prompt focused on fixing
+  const prompt = `Fix this ${language} code:
 
-\`\`\`${language}
 ${code}
-\`\`\`
 
-Fixed code:
-\`\`\`${language}
-`;
+Fixed code:`;
 
   try {
     console.log("Sending request to Hugging Face API...");
@@ -42,9 +38,12 @@ Fixed code:
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      console.error("API Error Details:", error);
-      throw new Error(error.error || 'Failed to connect to Hugging Face API');
+      console.error("API Error Status:", response.status);
+      // Return original code if there's an error
+      return {
+        fixedCode: code,
+        explanation: ""
+      };
     }
 
     const result = await response.json();
@@ -53,10 +52,8 @@ Fixed code:
     // Extract the fixed code
     let fixedCode = result[0]?.generated_text || result.generated_text || '';
     
-    // If the response contains a code block ending, remove it
-    if (fixedCode.includes("\`\`\`")) {
-      fixedCode = fixedCode.split("\`\`\`")[0].trim();
-    }
+    // Simple post-processing
+    fixedCode = fixedCode.trim();
     
     return { fixedCode, explanation: "" };
   } catch (error) {
