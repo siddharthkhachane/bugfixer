@@ -8,8 +8,8 @@ const ResultsPanel = ({ fixedCode, language, isLoading }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-xl font-semibold mb-4">Fixed Code</h2>
+    <div className="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6">
+      <h2 className="text-xl font-semibold mb-4 text-blue-300">Fixed Code</h2>
 
       {isLoading ? (
         <div className="flex items-center justify-center h-80">
@@ -21,7 +21,7 @@ const ResultsPanel = ({ fixedCode, language, isLoading }) => {
             <div className="absolute top-2 right-2">
               <button
                 onClick={() => copyToClipboard(fixedCode)}
-                className="bg-gray-200 hover:bg-gray-300 p-1 rounded-md"
+                className="bg-gray-700 hover:bg-gray-600 p-1 rounded-md"
                 title="Copy code"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -30,7 +30,7 @@ const ResultsPanel = ({ fixedCode, language, isLoading }) => {
                 </svg>
               </button>
             </div>
-            <div className="overflow-auto max-h-80 p-4 bg-gray-50 border border-gray-200 rounded-md font-mono text-sm whitespace-pre">
+            <div className="overflow-auto max-h-80 p-4 bg-gray-900 border border-gray-700 rounded-md font-mono text-sm whitespace-pre text-gray-200">
               {fixedCode}
             </div>
           </div>
