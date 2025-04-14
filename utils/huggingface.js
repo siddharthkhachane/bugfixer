@@ -1,5 +1,5 @@
 /**
- * Utility to interact with Hugging Face Inference API - SantaCoder model
+ * Utility to interact with Hugging Face Inference API - DeepSeek Coder 6B model
  */
 export async function fixCode(code, language) {
   // Direct API key
@@ -10,25 +10,19 @@ export async function fixCode(code, language) {
     'Authorization': `Bearer ${HF_TOKEN}`
   };
 
-  // Use SantaCoder - small, fast, and reliable for the free tier
-  const MODEL_URL = 'https://api-inference.huggingface.co/models/bigcode/santacoder';
+  // Use DeepSeek Coder 6B model
+  const MODEL_URL = 'https://api-inference.huggingface.co/models/deepseek-ai/deepseek-coder-6.7b-instruct';
   
-  // Language-specific comment style for the prompt
-  let commentPrefix = "//";
-  if (language === "python") {
-    commentPrefix = "#";
-  } else if (language === "ruby") {
-    commentPrefix = "#";
-  } else if (language === "php") {
-    commentPrefix = "//";
-  }
-  
-  // Simple prompt with language-specific comments
-  const prompt = `${commentPrefix} Fix the bugs in this ${language} code:
-${code}
+  // Format prompt for DeepSeek Coder
+  const prompt = `<｜begin▁of▁sentence｜>
+I need you to fix bugs in the following ${language} code. Only return the corrected code with no explanations.
 
-${commentPrefix} Fixed ${language} code:
-`;
+\`\`\`${language}
+${code}
+\`\`\`
+
+Fixed code:
+\`\`\`${language}`;
 
   try {
     console.log("Sending request to Hugging Face API...");
@@ -62,8 +56,10 @@ ${commentPrefix} Fixed ${language} code:
     // Extract the fixed code
     let fixedCode = result[0]?.generated_text || result.generated_text || '';
     
-    // Simple post-processing
-    fixedCode = fixedCode.trim();
+    // If the response contains the closing code fence, remove it
+    if (fixedCode.includes("\`\`\`")) {
+      fixedCode = fixedCode.split("\`\`\`")[0].trim();
+    }
     
     return { fixedCode, explanation: "" };
   } catch (error) {
