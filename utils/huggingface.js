@@ -1,5 +1,5 @@
 /**
- * Utility to interact with Hugging Face Inference API - CodeLlama model
+ * Utility to interact with Hugging Face Inference API - Faster StableCode model
  */
 export async function fixCode(code, language) {
   // Direct API key
@@ -10,15 +10,17 @@ export async function fixCode(code, language) {
     'Authorization': `Bearer ${HF_TOKEN}`
   };
 
-  // Use CodeLlama-7b which worked well
-  const MODEL_URL = 'https://api-inference.huggingface.co/models/codellama/CodeLlama-7b-hf';
+  // Use StableCode Instruct 3B - much faster than CodeLlama
+  const MODEL_URL = 'https://api-inference.huggingface.co/models/stabilityai/stablecode-instruct-alpha-3b';
   
-  // Simple prompt focused on fixing
-  const prompt = `Fix this ${language} code:
+  // Simple prompt focused on fixing with language-specific format
+  const prompt = `<|system|>
+You are an expert programmer who fixes bugs in code.
+<|user|>
+Fix this ${language} code. Only return the fixed code with no explanations:
 
 ${code}
-
-Fixed code:`;
+<|assistant|>`;
 
   try {
     console.log("Sending request to Hugging Face API...");
