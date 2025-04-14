@@ -1,7 +1,7 @@
 /**
- * Utility to interact with Hugging Face Inference API - DeepSeek Coder 6B model
+ * Utility to interact with Hugging Face Inference API - CodeLlama model
  */
-export async function fixCode(code, language) {
+export async function fixCodeWithAI(code, language) {
   // Direct API key
   const HF_TOKEN = "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";
   
@@ -10,19 +10,15 @@ export async function fixCode(code, language) {
     'Authorization': `Bearer ${HF_TOKEN}`
   };
 
-  // Use DeepSeek Coder 6B model
-  const MODEL_URL = 'https://api-inference.huggingface.co/models/deepseek-ai/deepseek-coder-6.7b-instruct';
+  // Use CodeLlama-7b which worked well
+  const MODEL_URL = 'https://api-inference.huggingface.co/models/codellama/CodeLlama-7b-hf';
   
-  // Format prompt for DeepSeek Coder
-  const prompt = `<｜begin▁of▁sentence｜>
-I need you to fix bugs in the following ${language} code. Only return the corrected code with no explanations.
+  // Simple prompt focused on fixing
+  const prompt = `Fix this ${language} code:
 
-\`\`\`${language}
 ${code}
-\`\`\`
 
-Fixed code:
-\`\`\`${language}`;
+Fixed code:`;
 
   try {
     console.log("Sending request to Hugging Face API...");
@@ -43,11 +39,7 @@ Fixed code:
 
     if (!response.ok) {
       console.error("API Error Status:", response.status);
-      // Return original code if there's an error
-      return {
-        fixedCode: code,
-        explanation: ""
-      };
+      throw new Error(`API returned ${response.status}`);
     }
 
     const result = await response.json();
@@ -56,19 +48,12 @@ Fixed code:
     // Extract the fixed code
     let fixedCode = result[0]?.generated_text || result.generated_text || '';
     
-    // If the response contains the closing code fence, remove it
-    if (fixedCode.includes("\`\`\`")) {
-      fixedCode = fixedCode.split("\`\`\`")[0].trim();
-    }
+    // Simple post-processing
+    fixedCode = fixedCode.trim();
     
     return { fixedCode, explanation: "" };
   } catch (error) {
     console.error('Error calling Hugging Face API:', error);
-    
-    // Return original code if there's an error
-    return {
-      fixedCode: code,
-      explanation: ""
-    };
+    throw error; // Let the calling function handle the fallback
   }
 }
