@@ -1,5 +1,5 @@
 /**
- * Utility to interact with Hugging Face Inference API - Faster StableCode model
+ * Utility to interact with Hugging Face Inference API - SantaCoder model
  */
 export async function fixCode(code, language) {
   // Direct API key
@@ -10,17 +10,25 @@ export async function fixCode(code, language) {
     'Authorization': `Bearer ${HF_TOKEN}`
   };
 
-  // Use StableCode Instruct 3B - much faster than CodeLlama
-  const MODEL_URL = 'https://api-inference.huggingface.co/models/stabilityai/stablecode-instruct-alpha-3b';
+  // Use SantaCoder - small, fast, and reliable for the free tier
+  const MODEL_URL = 'https://api-inference.huggingface.co/models/bigcode/santacoder';
   
-  // Simple prompt focused on fixing with language-specific format
-  const prompt = `<|system|>
-You are an expert programmer who fixes bugs in code.
-<|user|>
-Fix this ${language} code. Only return the fixed code with no explanations:
-
+  // Language-specific comment style for the prompt
+  let commentPrefix = "//";
+  if (language === "python") {
+    commentPrefix = "#";
+  } else if (language === "ruby") {
+    commentPrefix = "#";
+  } else if (language === "php") {
+    commentPrefix = "//";
+  }
+  
+  // Simple prompt with language-specific comments
+  const prompt = `${commentPrefix} Fix the bugs in this ${language} code:
 ${code}
-<|assistant|>`;
+
+${commentPrefix} Fixed ${language} code:
+`;
 
   try {
     console.log("Sending request to Hugging Face API...");
