@@ -14,10 +14,10 @@ export default async function handler(req, res) {
 
     console.log(`Processing ${language} code fix request...`);
 
-    // Call the Hugging Face API to fix the code
+    // Use DeepSeek Coder to fix the code
     const result = await fixCode(code, language);
     
-    // Return only the fixed code, no explanation
+    // Return the fixed code
     return res.status(200).json({
       fixedCode: result.fixedCode,
       explanation: ""
