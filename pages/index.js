@@ -10,6 +10,7 @@ export default function Home() {
   const [explanation, setExplanation] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [useAI, setUseAI] = useState(false);
 
   const handleSubmit = async () => {
     if (!code.trim()) {
@@ -26,7 +27,7 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ code, language }),
+        body: JSON.stringify({ code, language, useAI }),
       });
       
       const data = await response.json();
@@ -63,34 +64,52 @@ export default function Home() {
       </div>
 
       <Head>
-        <title>BugFixer - Code Fix Tool</title>
+        <title>BugFixer - AI Code Debugging Tool</title>
         <meta name="description" content="Fix your code bugs with AI" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="container mx-auto py-10 px-4 relative z-10">
         <h1 className="text-4xl font-bold text-center mb-2 text-blue-400">BugFixer</h1>
-        <p className="text-center text-gray-400 mb-8">Fix your code in seconds</p>
+        <p className="text-center text-gray-400 mb-8">Powered by AI - Fix your code in seconds</p>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 backdrop-filter backdrop-blur-sm bg-opacity-80">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-xl font-semibold text-blue-300">Your Code</h2>
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className="bg-gray-700 text-white px-3 py-1 border border-gray-600 rounded-md text-sm"
-              >
-                <option value="javascript">JavaScript</option>
-                <option value="python">Python</option>
-                <option value="java">Java</option>
-                <option value="cpp">C++</option>
-                <option value="csharp">C#</option>
-                <option value="php">PHP</option>
-                <option value="ruby">Ruby</option>
-                <option value="go">Go</option>
-                <option value="swift">Swift</option>
-              </select>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center">
+                  <label htmlFor="aiToggle" className="mr-2 text-sm text-gray-400">
+                    {useAI ? "AI Mode (Slower)" : "Fast Mode"}
+                  </label>
+                  <div className="relative inline-block w-10 mr-2 align-middle select-none">
+                    <input 
+                      type="checkbox" 
+                      id="aiToggle"
+                      checked={useAI}
+                      onChange={() => setUseAI(!useAI)}
+                      className="sr-only"
+                    />
+                    <div className={`block h-6 rounded-full w-10 ${useAI ? 'bg-blue-600' : 'bg-gray-600'}`}></div>
+                    <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${useAI ? 'transform translate-x-4' : ''}`}></div>
+                  </div>
+                </div>
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="bg-gray-700 text-white px-3 py-1 border border-gray-600 rounded-md text-sm"
+                >
+                  <option value="javascript">JavaScript</option>
+                  <option value="python">Python</option>
+                  <option value="java">Java</option>
+                  <option value="cpp">C++</option>
+                  <option value="csharp">C#</option>
+                  <option value="php">PHP</option>
+                  <option value="ruby">Ruby</option>
+                  <option value="go">Go</option>
+                  <option value="swift">Swift</option>
+                </select>
+              </div>
             </div>
             
             <CodeEditor code={code} setCode={setCode} language={language} />
@@ -100,7 +119,7 @@ export default function Home() {
               disabled={isLoading}
               className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Fixing...' : 'Fix My Code'}
+              {isLoading ? (useAI ? 'AI Fixing (may take 30s+)...' : 'Fixing...') : 'Fix My Code'}
             </button>
             
             {error && (
